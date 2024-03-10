@@ -1,54 +1,54 @@
 import { decorated } from "../proto/index.js";
 import { Writer } from "./index.js";
 import { Options } from '../options.js';
-import changeCase from "change-case";
+import * as changeCase from 'change-case';
 
 /**
  * OneOf code blocks
  */
 export class OneOf {
-    constructor(private p:Writer, private options:Options) {}
+  constructor(private p: Writer, private options: Options) { }
 
-    public discriminatorDecl(desc: decorated.Message, group: string): void {
-        const varName = OneOf.varName(this.options, desc.id, group);
-        const indexVarName = OneOf.indexVarName(this.options, desc.id, group);
+  public discriminatorDecl(desc: decorated.Message, group: string): void {
+    const varName = OneOf.varName(this.options, desc.id, group);
+    const indexVarName = OneOf.indexVarName(this.options, desc.id, group);
 
-        this.p(`
+    this.p(`
             public ${varName}:string = "";
             public ${indexVarName}:u8 = 0;
         `)
 
+  }
+
+  public discriminatorConst(field: decorated.Field): void {
+    if (!decorated.isOneOf(field)) {
+      return
     }
 
-    public discriminatorConst(field: decorated.Field): void {
-        if (!decorated.isOneOf(field)) {
-            return
-        }
-
-        if (field.oneOf == undefined) {
-            return
-        }
-
-        const name = changeCase.snakeCase(
-            field.oneOf+" "+field.name.replace(/[.]+/g, "_") + " index"
-        ).toUpperCase()
-
-        this.p(`static readonly ${name}:u8 = ${field.number};`)
+    if (field.oneOf == undefined) {
+      return
     }
 
-    public static varName(options: Options, id: string, f: string): string {
-        if (options.oneOf) {
-            const path = id + "." + f
-            const varName = options.oneOf.get(path)
-            if (varName) {
-                return varName
-            }
-        }
+    const name = changeCase.snakeCase(
+      field.oneOf + " " + field.name.replace(/[.]+/g, "_") + " index"
+    ).toUpperCase()
 
-        return `__${f}`;
+    this.p(`static readonly ${name}:u8 = ${field.number};`)
+  }
+
+  public static varName(options: Options, id: string, f: string): string {
+    if (options.oneOf) {
+      const path = id + "." + f
+      const varName = options.oneOf.get(path)
+      if (varName) {
+        return varName
+      }
     }
 
-    public static indexVarName(options: Options, id: string, f: string): string {
-        return OneOf.varName(options, id, f) + "_index";
-    }
+    return `__${f}`;
+  }
+
+  public static indexVarName(options: Options, id: string, f: string): string {
+    return OneOf.varName(options, id, f) + "_index";
+  }
 }
