@@ -1,3 +1,5 @@
+/** Exported memory */
+export declare const memory: WebAssembly.Memory;
 /**
  * tests/__fixtures__/assembly/nested/encode
  * @param obj `tests/__fixtures__/as_proto/nested/nested/Person`

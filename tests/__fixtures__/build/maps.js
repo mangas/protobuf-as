@@ -79,8 +79,8 @@ async function instantiate(module, imports = {}) {
     while (end - start > 1024) string += String.fromCharCode(...memoryU16.subarray(start, start += 1024));
     return string + String.fromCharCode(...memoryU16.subarray(start, end));
   }
-  const registry = new FinalizationRegistry(__release);
   class Internref extends Number {}
+  const registry = new FinalizationRegistry(__release);
   function __liftInternref(pointer) {
     if (!pointer) return null;
     const sentinel = new Internref(__retain(pointer));
@@ -115,14 +115,14 @@ async function instantiate(module, imports = {}) {
   return adaptedExports;
 }
 export const {
+  memory,
   encode,
   decode,
   size
 } = await (async url => instantiate(
-  await (
-    globalThis.fetch && globalThis.WebAssembly.compileStreaming
-      ? globalThis.WebAssembly.compileStreaming(globalThis.fetch(url))
-      : globalThis.WebAssembly.compile(await (await import("node:fs/promises")).readFile(url))
-  ), {
+  await (async () => {
+    try { return await globalThis.WebAssembly.compileStreaming(globalThis.fetch(url)); }
+    catch { return globalThis.WebAssembly.compile(await (await import("node:fs/promises")).readFile(url)); }
+  })(), {
   }
 ))(new URL("maps.wasm", import.meta.url));

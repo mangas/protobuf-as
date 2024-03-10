@@ -1,2 +1,2 @@
-#!/usr/bin/env yarn exec --silent ts-node
+#!/usr/bin/env yarn exec --silent tsx
 import("../src/main.ts")

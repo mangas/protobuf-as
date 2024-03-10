@@ -1,3 +1,5 @@
+/** Exported memory */
+export declare const memory: WebAssembly.Memory;
 /**
  * tests/__fixtures__/assembly/lists/encode
  * @param obj `tests/__fixtures__/as_proto/lists/lists/Lists`
