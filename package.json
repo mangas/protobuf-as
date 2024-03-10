@@ -10,9 +10,6 @@
     "type": "git",
     "directory": "gravitational/protobuf-as"
   },
-  "engines": {
-    "node": ">= 16.13 <17"
-  },
   "author": "Victor Sokolov <gzigzigzeo@gmail.com>",
   "bin": {
     "protoc-gen-as": "./bin/protoc-gen-as"
