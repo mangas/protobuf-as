@@ -1,2 +1,4 @@
-#!/usr/bin/env yarn exec --silent tsx
-import("../src/main.ts")
+#!/usr/bin/env bash
+
+HERE=$(cd $(dirname $BASH_SOURCE) && pwd)
+yarn exec --silent tsx $HERE/../src/main.ts
